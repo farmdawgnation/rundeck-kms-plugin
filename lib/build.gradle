@@ -6,9 +6,24 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    
+    integrationTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    integrationTestRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
     implementation 'org.rundeck:rundeck-core:3.3.9-20210201'
     implementation 'org.rundeck:rundeck-storage-api:3.3.9-20210201'

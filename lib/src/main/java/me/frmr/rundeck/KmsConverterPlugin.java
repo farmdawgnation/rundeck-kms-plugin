@@ -1,3 +1,5 @@
+package me.frmr.rundeck;
+
 import com.dtolabs.rundeck.core.plugins.Plugin;
 import com.dtolabs.rundeck.plugins.descriptions.*;
 import com.dtolabs.rundeck.core.storage.ResourceMetaBuilder;
@@ -27,16 +29,16 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
     var crypto = AwsCrypto.builder()
       .withCommitmentPolicy(CommitmentPolicy.RequireEncryptRequireDecrypt)
       .build();
-      
+
     var keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
     var materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
-    
+
     return new HasInputStream() {
       @Override
       public InputStream getInputStream() throws IOException {
         return crypto.createDecryptingStream(materialsManager, hasInputStream.getInputStream());
       }
-      
+
       @Override
       public long writeContent(OutputStream outputStream) throws IOException {
         return hasInputStream.writeContent(outputStream);
@@ -52,17 +54,17 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
     var crypto = AwsCrypto.builder()
       .withCommitmentPolicy(CommitmentPolicy.RequireEncryptRequireDecrypt)
       .build();
-      
+
     var keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
     var encryptionContext = Collections.singletonMap("path", path.toString());
     var materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
-    
+
     return new HasInputStream() {
       @Override
       public InputStream getInputStream() throws IOException {
         return crypto.createEncryptingStream(materialsManager, hasInputStream.getInputStream(), encryptionContext);
       }
-      
+
       @Override
       public long writeContent(OutputStream outputStream) throws IOException {
         return hasInputStream.writeContent(outputStream);
