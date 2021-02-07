@@ -5,3 +5,9 @@
 build
 
 bin
+
+# my local env settings
+.env
+
+# vs code
+.vscode
