@@ -1,21 +1,25 @@
 package me.frmr.rundeck;
 
-import java.io.BufferedOutputStream;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import com.dtolabs.rundeck.core.storage.ResourceMetaBuilder;
 
 import org.junit.jupiter.api.Test;
 import org.rundeck.storage.api.HasInputStream;
 import org.rundeck.storage.api.Path;
+import com.dtolabs.utils.Streams;
 
 class KmsConverterPluginIntegrationTest {
   @Test
-  void testEncryptDecrypt() {
+  void testEncryptDecrypt() throws IOException {
+    var exampleMessage = "Hello, KMS!";
     var sut = new KmsConverterPlugin();
     sut.keyArn = System.getenv("KMS_KEY_ARN");
 
@@ -35,9 +39,9 @@ class KmsConverterPluginIntegrationTest {
       }
     };
     var exampleMetaBuilder = new ResourceMetaBuilder();
+    KmsConverterPlugin.addMetadataWasEncrypted(exampleMetaBuilder);
     var exampleInputStream = new HasInputStream() {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ByteArrayInputStream bais = new ByteArrayInputStream(new byte[] {});
+      ByteArrayInputStream bais = new ByteArrayInputStream(exampleMessage.getBytes(Charset.defaultCharset()));
 
       @Override
       public InputStream getInputStream() throws IOException {
@@ -46,10 +50,15 @@ class KmsConverterPluginIntegrationTest {
 
       @Override
       public long writeContent(OutputStream outputStream) throws IOException {
-        baos.writeTo(outputStream);
-
-        return 0;
+        return Streams.copyStream(getInputStream(), outputStream);
       }
     };
+
+    var encryptedStream = sut.createResource(examplePath, exampleMetaBuilder, exampleInputStream);
+    var decryptedStream = sut.readResource(examplePath, exampleMetaBuilder, encryptedStream);
+
+    var decryptedMessage = new String(new BufferedInputStream(decryptedStream.getInputStream()).readAllBytes());
+
+    assertEquals(exampleMessage, decryptedMessage, "Decrypted text did not match input text");
   }
 }
