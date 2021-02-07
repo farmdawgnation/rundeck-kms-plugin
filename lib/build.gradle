@@ -14,6 +14,8 @@ sourceSets {
 }
 
 configurations {
+    integrationTestCompile.extendsFrom compile
+    integrationTestApi.extendsFrom api
     integrationTestImplementation.extendsFrom implementation
     integrationTestRuntimeOnly.extendsFrom runtimeOnly
 }
@@ -21,17 +23,26 @@ configurations {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    
+
     integrationTestImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     integrationTestRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
     implementation 'org.rundeck:rundeck-core:3.3.9-20210201'
     implementation 'org.rundeck:rundeck-storage-api:3.3.9-20210201'
-    
-    compile 'com.amazonaws:aws-encryption-sdk-java:2.0.0'
+
+    api 'com.amazonaws:aws-encryption-sdk-java:2.0.0'
+    api 'com.amazonaws:aws-java-sdk:1.11.704'
 }
 
-tasks.named('test') {
-    // Use junit platform for unit tests.
+task integrationTest(type: Test) {
+    description = 'Run integration tests.'
+    check.dependsOn(it)
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath + sourceSets.main.runtimeClasspath
+    shouldRunAfter test
+}
+
+tasks.withType(Test) {
     useJUnitPlatform()
 }

@@ -16,7 +16,7 @@ import org.rundeck.storage.api.HasInputStream;
 import org.rundeck.storage.api.Path;
 import com.dtolabs.utils.Streams;
 
-class KmsConverterPluginIntegrationTest {
+public class KmsConverterPluginIntegrationTest {
   @Test
   void testEncryptDecrypt() throws IOException {
     var exampleMessage = "Hello, KMS!";
