@@ -12,6 +12,8 @@ dependencies {
 
     implementation 'org.rundeck:rundeck-core:3.3.9-20210201'
     implementation 'org.rundeck:rundeck-storage-api:3.3.9-20210201'
+    
+    compile 'com.amazonaws:aws-encryption-sdk-java:2.0.0'
 }
 
 tasks.named('test') {
