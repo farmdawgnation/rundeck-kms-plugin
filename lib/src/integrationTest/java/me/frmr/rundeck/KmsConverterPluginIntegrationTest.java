@@ -1,6 +1,7 @@
 package me.frmr.rundeck;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -17,6 +18,46 @@ import org.rundeck.storage.api.Path;
 import com.dtolabs.utils.Streams;
 
 public class KmsConverterPluginIntegrationTest {
+  @Test
+  void testIgnoresNonKmsData() throws IOException {
+    var exampleMessage = "Hello, KMS!";
+    var sut = new KmsConverterPlugin();
+    sut.keyArn = System.getenv("KMS_KEY_ARN");
+
+    if (sut.keyArn == null) {
+      throw new RuntimeException("Env var KMS_KEY_ARN required for integration tests");
+    }
+
+    var examplePath = new Path() {
+      @Override
+      public String getPath() {
+        return "/tests/integration/foo";
+      }
+
+      @Override
+      public String getName() {
+        return "foo";
+      }
+    };
+    var exampleMetaBuilder = new ResourceMetaBuilder();
+    var exampleInputStream = new HasInputStream() {
+      ByteArrayInputStream bais = new ByteArrayInputStream(exampleMessage.getBytes(Charset.defaultCharset()));
+
+      @Override
+      public InputStream getInputStream() throws IOException {
+        return bais;
+      }
+
+      @Override
+      public long writeContent(OutputStream outputStream) throws IOException {
+        return Streams.copyStream(getInputStream(), outputStream);
+      }
+    };
+
+    var decryptedStream = sut.readResource(examplePath, exampleMetaBuilder, exampleInputStream);
+    assertNull(decryptedStream, "KMS pluting attempted to decrypt something it didn't encrypt");
+  }
+
   @Test
   void testEncryptDecrypt() throws IOException {
     var exampleMessage = "Hello, KMS!";
@@ -39,7 +80,6 @@ public class KmsConverterPluginIntegrationTest {
       }
     };
     var exampleMetaBuilder = new ResourceMetaBuilder();
-    KmsConverterPlugin.addMetadataWasEncrypted(exampleMetaBuilder);
     var exampleInputStream = new HasInputStream() {
       ByteArrayInputStream bais = new ByteArrayInputStream(exampleMessage.getBytes(Charset.defaultCharset()));
 
