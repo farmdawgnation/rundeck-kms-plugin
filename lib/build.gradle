@@ -5,6 +5,7 @@ plugins {
 
 ext.pluginClassNames='me.frmr.rundeck.KmsConverterPlugin'
 ext.pluginName = 'Rundeck KMS Plugin'
+ext.pluginFileVersion = '1.0.1-SNAPSHOT'
 ext.pluginDescription = 'Encrypts and decrypts storace using Amazon KMS'
 
 
@@ -74,7 +75,7 @@ jar {
             'Rundeck-Plugin-Author': 'Matt Farmer',
             'Rundeck-Plugin-URL': 'https://github.com/farmdawgnation/rundeck-kms-plugin',
             'Rundeck-Plugin-Date': '2020-02-07',
-            'Rundeck-Plugin-File-Version': '1.0',
+            'Rundeck-Plugin-File-Version': pluginFileVersion,
             'Rundeck-Plugin-Name': pluginName,
             'Rundeck-Plugin-Description': pluginDescription,
             'Rundeck-Plugin-Libs': "${libList}"
