@@ -43,8 +43,8 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
       return null;
     }
 
-    var keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
-    var materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
+    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
+    CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
     return new DecryptionStream(hasInputStream, materialsManager);
   }
 
@@ -54,9 +54,9 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
       ResourceMetaBuilder resourceMetaBuilder,
       HasInputStream hasInputStream){
 
-    var keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
-    var encryptionContext = Collections.singletonMap("path", path.getPath());
-    var materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
+    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
+    Map<String,String> encryptionContext = Collections.singletonMap("path", path.getPath());
+    CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
     addMetadataWasEncrypted(resourceMetaBuilder);
     return new EncryptionStream(hasInputStream, materialsManager, encryptionContext);
   }
@@ -86,7 +86,7 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
 
     @Override
     public InputStream getInputStream() throws IOException {
-      var crypto = AwsCrypto.builder()
+      AwsCrypto crypto = AwsCrypto.builder()
         .withCommitmentPolicy(CommitmentPolicy.RequireEncryptRequireDecrypt)
         .build();
       return crypto.createEncryptingStream(materialsManager, hasInputStream.getInputStream(), encryptionContext);
@@ -113,7 +113,7 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
 
     @Override
     public InputStream getInputStream() throws IOException {
-      var crypto = AwsCrypto.builder()
+      AwsCrypto crypto = AwsCrypto.builder()
         .withCommitmentPolicy(CommitmentPolicy.RequireEncryptRequireDecrypt)
         .build();
       return crypto.createDecryptingStream(materialsManager, hasInputStream.getInputStream());
