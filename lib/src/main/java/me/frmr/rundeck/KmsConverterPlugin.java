@@ -30,7 +30,7 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
   /**
    * The ARN to the Key Management Service Key to access.
    */
-  @PluginProperty(title="Key ARN", description="The ARN to the key to use", required=true)
+  @PluginProperty(title="Key ARN", description="The ARN of the KMS key to use for encryption and decryption", required=true)
   String keyArn;
 
   /** read the stored data, decrypt if necessary */
