@@ -5,7 +5,7 @@ plugins {
 
 ext.pluginClassNames='me.frmr.rundeck.KmsConverterPlugin'
 ext.pluginName = 'Rundeck KMS Plugin'
-ext.pluginFileVersion = '1.0.1-SNAPSHOT'
+ext.pluginFileVersion = '1.0.1'
 ext.pluginDescription = 'Encrypts and decrypts storace using Amazon KMS'
 
 
