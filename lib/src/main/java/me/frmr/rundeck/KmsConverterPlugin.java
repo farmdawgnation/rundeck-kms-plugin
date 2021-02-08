@@ -8,9 +8,12 @@ import com.dtolabs.rundeck.plugins.storage.StorageConverterPlugin;
 import org.rundeck.storage.api.HasInputStream;
 import org.rundeck.storage.api.Path;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.encryptionsdk.*;
 import com.amazonaws.encryptionsdk.kms.*;
+import com.amazonaws.internal.StaticCredentialsProvider;
+
 import java.util.Collections;
 import java.util.Map;
 import java.io.*;
@@ -59,7 +62,9 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
 
     KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider
       .builder()
-      .withCredentials(new BasicAWSCredentials(accessKeyId, secretAccessKey))
+      .withCredentials(new AWSStaticCredentialsProvider(
+        new BasicAWSCredentials(accessKeyId, secretAccessKey)
+      ))
       .buildStrict(keyArn);
     CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
     return new DecryptionStream(hasInputStream, materialsManager);
@@ -73,7 +78,9 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
 
     KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider
       .builder()
-      .withCredentials(new BasicAWSCredentials(accessKeyId, secretAccessKey))
+      .withCredentials(new AWSStaticCredentialsProvider(
+        new BasicAWSCredentials(accessKeyId, secretAccessKey)
+      ))
       .buildStrict(keyArn);
     Map<String,String> encryptionContext = Collections.singletonMap("path", path.getPath());
     CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
