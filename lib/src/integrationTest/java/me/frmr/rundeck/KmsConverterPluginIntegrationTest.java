@@ -23,6 +23,8 @@ public class KmsConverterPluginIntegrationTest {
     var exampleMessage = "Hello, KMS!";
     var sut = new KmsConverterPlugin();
     sut.keyArn = System.getenv("KMS_KEY_ARN");
+    sut.accessKeyId = System.getenv("AWS_ACCESS_KEY_ID");
+    sut.secretAccessKey = System.getenv("AWS_SECRET_ACCESS_KEY");
 
     if (sut.keyArn == null) {
       throw new RuntimeException("Env var KMS_KEY_ARN required for integration tests");
@@ -63,6 +65,8 @@ public class KmsConverterPluginIntegrationTest {
     var exampleMessage = "Hello, KMS!";
     var sut = new KmsConverterPlugin();
     sut.keyArn = System.getenv("KMS_KEY_ARN");
+    sut.accessKeyId = System.getenv("AWS_ACCESS_KEY_ID");
+    sut.secretAccessKey = System.getenv("AWS_SECRET_ACCESS_KEY");
 
     if (sut.keyArn == null) {
       throw new RuntimeException("Env var KMS_KEY_ARN required for integration tests");
