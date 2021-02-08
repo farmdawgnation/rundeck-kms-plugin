@@ -38,13 +38,13 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
   /**
    * Configuration provided Access Key Id
    */
-  @PluginProperty(title="Access Key ID", description = "The access key that should be used when accessing KMS", required=false)
+  @PluginProperty(title="Access Key ID", description = "The access key that should be used when accessing KMS", required=true)
   String accessKeyId;
 
   /**
    * Configuration provied secret access key
    */
-  @PluginProperty(title="Secret Access Key", description = "The secret access key that should be used when accessing KMS", required = false)
+  @PluginProperty(title="Secret Access Key", description = "The secret access key that should be used when accessing KMS", required = true)
   String secretAccessKey;
 
   /** read the stored data, decrypt if necessary */
