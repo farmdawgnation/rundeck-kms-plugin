@@ -14,7 +14,7 @@ import java.util.Map;
 import java.io.*;
 import com.dtolabs.utils.Streams;
 
-@Plugin(name="KmsConverterPlugin", service=ServiceNameConstants.StorageConverter)
+@Plugin(name="rundeck-kms-plugin", service=ServiceNameConstants.StorageConverter)
 @PluginDescription(title="Rundeck KMS Plugin", description="Encrypts storage data using Amazon KMS")
 public class KmsConverterPlugin implements StorageConverterPlugin {
   public static final String KMS_WAS_ENCRYPTED = "kms-converter-plugin:is-kms-encrypted";

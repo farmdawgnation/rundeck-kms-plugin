@@ -14,3 +14,15 @@ be running a modern version of Java. Also, it makes me type less and I'm doing t
 
 Binary versions of the plugin can be found on the Releases page of this repository. You can also
 build it from source.
+
+The full JAR is a bit hefty because we're required to ship the entire AWS SDK to get KMS support.
+If I get interest in a version of the JAR that uses a _shared_ AWS SDK, I'm happy to provide one.
+That would work better for folks who already package the AWS SDK in Rundeck's classpath in its
+entirety.
+
+# About the Author
+
+I'm Matt Farmer, a Staff Engineer at [Greenlight Financial Technology][gl] in
+Platform Engineering.
+
+[gl]: https://greenlightcard.com
