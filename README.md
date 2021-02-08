@@ -21,16 +21,23 @@ If I get interest in a version of the JAR that uses a _shared_ AWS SDK, I'm happ
 That would work better for folks who already package the AWS SDK in Rundeck's classpath in its
 entirety.
 
-## Authentication
+## Configuration
 
-If you're running Rundeck within AWS, you canuse instance roles to assign the
-proper permissions for Rundeck to access KMS for the use of this plugin.
+The following in your `rundeck-config.properties` will configure this plugin:
 
-I still need to add code to handle passing these values in from configuration.
+```
+rundeck.storage.converter.1.type=rundeck-kms-plugin
+rundeck.storage.converter.1.path=keys
+rundeck.storage.converter.1.config.keyArn=<ARN TO YOUR KEY>
+rundeck.storage.converter.1.config.accessKeyId=<ACCESS KEY ID>
+rundeck.storage.converter.1.config.secretAccessKey=<SECRET ACCESS KEY>
 
-For testing purposes, you can also set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-as with any other AWS library, though there are likely reasons this ins't good
-in production.
+rundeck.config.storage.converter.1.type=rundeck-kms-plugin
+rundeck.config.storage.converter.1.path=projects
+rundeck.config.storage.converter.1.config.keyArn=<ARN TO YOUR KEY>
+rundeck.config.storage.converter.1.config.accessKeyId=<ACCESS KEY ID>
+rundeck.config.storage.converter.1.config.secretAccessKey=<SECRET ACCESS KEY>
+```
 
 # About the Author
 

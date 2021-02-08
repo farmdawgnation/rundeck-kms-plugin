@@ -7,8 +7,13 @@ import com.dtolabs.rundeck.plugins.ServiceNameConstants;
 import com.dtolabs.rundeck.plugins.storage.StorageConverterPlugin;
 import org.rundeck.storage.api.HasInputStream;
 import org.rundeck.storage.api.Path;
+
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.encryptionsdk.*;
 import com.amazonaws.encryptionsdk.kms.*;
+import com.amazonaws.internal.StaticCredentialsProvider;
+
 import java.util.Collections;
 import java.util.Map;
 import java.io.*;
@@ -33,6 +38,18 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
   @PluginProperty(title="Key ARN", description="The ARN of the KMS key to use for encryption and decryption", required=true)
   String keyArn;
 
+  /**
+   * Configuration provided Access Key Id
+   */
+  @PluginProperty(title="Access Key ID", description = "The access key that should be used when accessing KMS", required=true)
+  String accessKeyId;
+
+  /**
+   * Configuration provied secret access key
+   */
+  @PluginProperty(title="Secret Access Key", description = "The secret access key that should be used when accessing KMS", required = true)
+  String secretAccessKey;
+
   /** read the stored data, decrypt if necessary */
   public HasInputStream readResource(
       Path path,
@@ -43,7 +60,12 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
       return null;
     }
 
-    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
+    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider
+      .builder()
+      .withCredentials(new AWSStaticCredentialsProvider(
+        new BasicAWSCredentials(accessKeyId, secretAccessKey)
+      ))
+      .buildStrict(keyArn);
     CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
     return new DecryptionStream(hasInputStream, materialsManager);
   }
@@ -54,7 +76,12 @@ public class KmsConverterPlugin implements StorageConverterPlugin {
       ResourceMetaBuilder resourceMetaBuilder,
       HasInputStream hasInputStream){
 
-    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
+    KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider
+      .builder()
+      .withCredentials(new AWSStaticCredentialsProvider(
+        new BasicAWSCredentials(accessKeyId, secretAccessKey)
+      ))
+      .buildStrict(keyArn);
     Map<String,String> encryptionContext = Collections.singletonMap("path", path.getPath());
     CryptoMaterialsManager materialsManager = new DefaultCryptoMaterialsManager(keyProvider);
     addMetadataWasEncrypted(resourceMetaBuilder);
