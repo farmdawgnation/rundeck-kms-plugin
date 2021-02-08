@@ -12,7 +12,6 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.encryptionsdk.*;
 import com.amazonaws.encryptionsdk.kms.*;
-import com.amazonaws.internal.StaticCredentialsProvider;
 
 import java.util.Collections;
 import java.util.Map;
