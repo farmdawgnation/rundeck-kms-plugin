@@ -31,6 +31,12 @@ rundeck.storage.converter.1.path=keys
 rundeck.storage.converter.1.config.keyArn=<ARN TO YOUR KEY>
 rundeck.storage.converter.1.config.accessKeyId=<ACCESS KEY ID>
 rundeck.storage.converter.1.config.secretAccessKey=<SECRET ACCESS KEY>
+
+rundeck.config.storage.converter.1.type=rundeck-kms-plugin
+rundeck.config.storage.converter.1.path=projects
+rundeck.config.storage.converter.1.config.keyArn=<ARN TO YOUR KEY>
+rundeck.config.storage.converter.1.config.accessKeyId=<ACCESS KEY ID>
+rundeck.config.storage.converter.1.config.secretAccessKey=<SECRET ACCESS KEY>
 ```
 
 # About the Author
