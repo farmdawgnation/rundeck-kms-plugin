@@ -3,6 +3,8 @@ name: Main CI
 on:
   push:
     branches: [ main ]
+    paths:
+    - 'lib/**'
 
 jobs:
   build:
